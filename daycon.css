@@ -1,0 +1,217 @@
+.app{
+    overflow-y: hidden;
+    overflow-x: scroll;
+    height:auto;
+    width:100%;
+    min-height:90vh;
+}
+
+.day-con{
+    display: flex;
+    flex-wrap: wrap;
+    min-width:1400px;
+    padding:10px 20px;
+}
+.days-name-con{
+    display: flex;
+    flex-wrap: wrap;
+    min-width:1400px;
+    padding:0px 20px;
+    padding-top:25px;
+}
+
+.days-name-con p{
+    font-weight:var(--font-stack);
+    flex: 1 0 13%;
+    margin:0px;
+    text-align:center;
+    font-weight:600;
+    color:grey;
+}
+  
+.day {
+    flex: 1 0 13.5%;
+    margin: 3px;
+    height: 100%;
+    background-color: white;
+    border:solid 2px rgb(221, 221, 221);
+    border-radius:4px;
+}
+
+.day-tasks .task:last-child{
+    margin-bottom:10px;
+}
+
+.day-tool{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:5px;
+    height:20px;
+}
+
+.day-tool-btns-con {
+    display:flex;
+    align-items: center;
+}
+
+.day-tool p{
+    font-family:var(--font-stack);
+    font-size:11pt;
+    font-weight:600;
+    color:grey;
+    margin:0px;
+}
+.day-tool div{
+    --ggs: 0.7;
+    cursor:pointer;
+    display:none;
+    color:grey;
+}
+.day-tool div:hover {
+    color:rgb(167, 167, 167);
+}
+.day:hover .day-tool div{
+    display:block;
+}
+
+
+
+
+
+
+
+.task {
+    display:flex;
+    align-items:flex-start;
+    padding:1px 5px;
+    font-family:var(--font-stack);
+    font-size:9pt;
+    /*background-color:rgb(250, 129, 129);*/
+}
+.task input{
+    margin:0px;
+    margin-right:5px;
+    cursor:pointer;
+    margin-top:2px;
+    opacity:0.7;
+}
+.task input:checked{
+    opacity:0.5;
+}
+
+.task p{
+    margin:0px;
+    outline:none;
+    line-height:18px;
+    min-width:70%;
+}
+
+
+
+
+.event {
+    display:flex;
+    align-items:flex-start;
+    padding:3.5px 5px;
+    margin:2px 3px;
+    border-radius:2.5px;
+    font-family:var(--font-stack);
+    font-size:9pt;
+    background-color:rgb(211, 243, 211);
+}
+.event time{
+    color:rgba(0, 0, 0, 0.596);
+    font-weight:600;
+    margin:0px;
+    margin-right:5px;
+}
+.event .link{
+    font-weight:800;
+    text-decoration:underline;
+    cursor:pointer;
+}
+.event p{
+    margin:0px;
+    outline:none;
+    min-width:90%;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .app{
+        overflow-x: hidden;
+        margin-top:30px;
+    }
+    .day-con{
+        min-width:100%;
+        width:100%;
+        padding:0px;
+    }
+    .days-name-con{
+        display:none;
+    }
+    .day {
+        flex: 1 0 90%;
+        margin: 5px 20px;
+        height: 100%;
+        background-color: white;
+        border:solid 2px rgb(221, 221, 221);
+        border-radius:4px;
+    }
+    .day-tool {
+        padding:15px 10px;
+    }
+    .day-tool p {
+        font-size:16pt;
+        margin-left:4px;
+    }
+    .day-tool div{
+        display:block;
+        --ggs:1;
+        margin-left:10px;
+    }
+    .gg-calendar-dates {
+        --ggs:1.15;
+    }
+
+    .task, .event {
+        display:flex;
+        align-items:flex-start;
+        padding:1px 5px;
+        font-family:var(--font-stack);
+        font-size:9pt;
+        /*background-color:rgb(250, 129, 129);*/
+    }
+    .task input {
+        -ms-transform: scale(1.4); /* IE */
+        -moz-transform: scale(1.4); /* FF */
+        -webkit-transform: scale(1.4); /* Safari and Chrome */
+        -o-transform: scale(1.4); /* Opera */
+        transform: scale(1.4);
+        padding: 10px;
+        margin:10px;
+        margin-right:10px;
+        cursor:pointer;
+        margin-top:3.5px;
+    }
+    .task p, .event p{
+        font-size:13pt;
+        line-height: 22px;
+    }
+
+    .event {
+        border-radius:4px;
+        margin: 4px 10px;
+        padding: 4px 8px;
+    }
+    .event:last-child{
+        margin-bottom:15px;
+    }
+    .event time {
+        font-size:13pt;
+        margin-right:10px;
+    }
+
+
+  }
