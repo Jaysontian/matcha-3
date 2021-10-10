@@ -184,11 +184,11 @@
         /*background-color:rgb(250, 129, 129);*/
     }
     .task input {
-        -ms-transform: scale(1.4); /* IE */
-        -moz-transform: scale(1.4); /* FF */
-        -webkit-transform: scale(1.4); /* Safari and Chrome */
-        -o-transform: scale(1.4); /* Opera */
-        transform: scale(1.4);
+        -ms-transform: scale(1.2); /* IE */
+        -moz-transform: scale(1.2); /* FF */
+        -webkit-transform: scale(1.2); /* Safari and Chrome */
+        -o-transform: scale(1.2); /* Opera */
+        transform: scale(1.2);
         padding: 10px;
         margin:10px;
         margin-right:10px;
