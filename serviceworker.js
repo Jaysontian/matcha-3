@@ -11,7 +11,6 @@ const assets = [
   "/event.js",
   "/login.js",
   "/pages.js",
-  "/serviceworker.js",
   "/images/logo.png",
 ];
 
