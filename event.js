@@ -115,6 +115,7 @@ function creatEvent(dayselected, val, idnum, time, link){
                     if (!newlink.includes('https')){newlink = 'https://' + newlink}
                     note.find('time').addClass('link').click(()=>{void(0);window.open(newlink, '_blank')});
                     task.link = newlink;
+                    updateNotif(dayselected, id, task.time, task.val, newlink);
                     save();
                 } else {alert('Please insert valid link.')}
             }
@@ -133,6 +134,7 @@ function creatEvent(dayselected, val, idnum, time, link){
                 e.preventDefault();  
                 note.remove();
                 data[dayselected].splice(index, 1);
+                deleteNotif(id);
                 save();
             }
         }
@@ -140,6 +142,7 @@ function creatEvent(dayselected, val, idnum, time, link){
             e.preventDefault();  
             note.remove();
             data[dayselected].splice(index, 1);
+            deleteNotif(id);
             save();
         }
         if ((e.metaKey && e.keyCode == 75) || (e.shiftKey && e.keyCode == 75)){ //******************** adding a link
@@ -149,6 +152,7 @@ function creatEvent(dayselected, val, idnum, time, link){
                 note.find('time').removeClass('link').click(()=>{return false});
                 task.link = '';
                 save();
+                updateNotif(dayselected, id, task.time, task.val, newlink);
                 refreshEvents(dayselected);
             } else {
                 if (validURL(newlink)){
@@ -156,6 +160,7 @@ function creatEvent(dayselected, val, idnum, time, link){
                     note.find('time').addClass('link').click(()=>{void(0);window.open(newlink, '_blank')});
                     task.link = newlink;
                     save();
+                    updateNotif(dayselected, id, task.time, task.val, newlink);
                 } else {alert('Please insert valid link.')}
             }
         }
@@ -163,16 +168,67 @@ function creatEvent(dayselected, val, idnum, time, link){
     field.keyup(e=>{
         var fieldText = field.text();
         if (fieldText.includes('(') && fieldText.includes(')')){ /// if there is time change
-            var fieldTime = fieldText.substring(fieldText.indexOf("(") + 1, fieldText.lastIndexOf(")"));    
+            var fieldTime = fieldText.substring(fieldText.indexOf("(") + 1, fieldText.lastIndexOf(")"));
+            fieldText = fieldText.replace('('+fieldTime+')', '');
             task.time = timeToCode(fieldTime);
             save();
             note.find('time').text(codeToTime(task.time));
             refreshEvents(dayselected, id, fieldTime);
+            updateNotif(dayselected, id, task.time, fieldText, task.link);
         }
+        updateNotif(dayselected, id, task.time, fieldText, task.link);
         task.val = field.html();
         save();
     });
 };
+
+function deleteNotif(id){
+    console.log('deleting notif')
+    navigator.serviceWorker.getRegistration().then(reg=>{
+        reg.getNotifications({
+            includeTriggered: true
+        }).then(notifications => {
+            notifications.forEach(notification=>{
+                if (notification.tag == id){
+                    notification.close();
+                    console.log('success.')
+                }
+            })
+        });
+    });
+}
+
+function updateNotif(dayselected, id, time, val, link){
+    var f_time = time;
+    var f_val = val;
+    var f_link = link;
+    var close;
+
+    navigator.serviceWorker.getRegistration().then(reg=>{
+        reg.getNotifications({
+            includeTriggered: true
+        }).then(notifications => {
+            notifications.forEach(notification=>{
+                if (notification.tag == id){
+                    close = notification;
+                }
+            })
+        });
+    });
+
+    if (close !=null){
+        close.close(); // 6 min = 36,000 // 1 min = 6,000
+    }
+
+    var a = Date.parse(f_time);
+    a.setFullYear(parseInt((dayselected.toString()).substring(0, 4)));
+    a.setMonth(parseInt((dayselected.toString()).substring(4, 6))-1);
+    a.setDate(parseInt((dayselected.toString()).substring(6,8)));
+    if (data.cog.alert_before == null || data.cog.alert_before == ''){data.cog.alert_before =10; save()}
+    b = new Date(a.getTime() - 60000 * data.cog.alert_before);
+    displayNotification(f_val, a.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }), b, id, f_link);
+    console.log(b);
+}
 
 function refreshEvents(dayselected, id, fieldTime){
     var eventarray = [];

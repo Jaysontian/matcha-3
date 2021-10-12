@@ -1,12 +1,61 @@
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-      navigator.serviceWorker
+
+
+
+window.onload = () => {
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
         .register("/serviceWorker.js")
         .then(res => console.log("service worker registered"))
         .catch(err => console.log("service worker not registered", err));
+    }
+
+    if (Notification.permission != 'granted'){
+        Notification.requestPermission(function(status) {
+            console.log('Notification permission status:', status);
+            displayNotification('Notifications Enabled', 'Matcha will now notify you of calendar events.');
+        });
+    } else {
+        console.log('Notifications previously granted.');
+        //displayNotification('Notifications Enabled', '', null, null, 'https://jaysontian.com');
+    }
+}
+navigator.serviceWorker.addEventListener('message', event => console.log(event.data));
+
+function displayNotification(title, body, scheduled, id, link) {
+  if (Notification.permission == 'granted') {
+    navigator.serviceWorker.getRegistration().then(function(reg) {
+        var timestamp;
+        if (title == null || title == ''){
+            title = "Untitled Event"
+        }
+        if (scheduled != null) {
+            timestamp = scheduled;
+        } else {
+            timestamp = new Date().getTime(); // now plus 5000ms
+        }
+        if (!id) {id = Date.now()}
+        var options = {
+            tag: id, // a unique ID
+            body: body,
+            requireInteraction: true,
+            icon: 'images/logo.png',
+            badge: 'images/logo.png',
+            vibrate: [100, 50, 100],
+            showTrigger: new TimestampTrigger(timestamp),
+            data: {
+                link: link,
+                dateOfArrival: Date.now(),
+                primaryKey: 1,
+                url: window.location.href,
+                id: id,
+                date: timestamp
+            },
+        };
+        reg.showNotification(title, options);
     });
   }
-  
+}
+
 
 var firebaseConfig = {
     apiKey: "AIzaSyD1YBSA5DcwjK92qsMeiYturKLA1Q2EQdw",
@@ -60,11 +109,18 @@ firebase.auth().onAuthStateChanged((user) => {
         db.collection("users").doc(firebase.auth().currentUser.uid).get().then(doc => {
             if (doc.exists) {
                 data = doc.data();
+                if (!data.cog){data.cog={};}
                 init();
             } else {
-                data = {};
+                data = {
+                    cog: {
+                        desktop_notif:true,
+                        alert_before: 10, // in minutes 
+                    }
+                };
                 init();
-            }
+            };
+            rendercog();
         });
     } 
     

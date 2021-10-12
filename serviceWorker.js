@@ -29,3 +29,24 @@ self.addEventListener("fetch", fetchEvent => {
     })
   );
 });
+
+self.addEventListener('notificationclick', event => {
+  event.waitUntil(self.clients.matchAll().then(clients => {
+    if (event.notification.data.link != null && event.notification.data.link != ''){
+      self.clients.openWindow(event.notification.data.link);
+    }
+    if (clients.length) { // check if at least one tab is already open
+      clients[0].focus();
+      clients[0].postMessage('Window refocused');
+    }
+  }));
+});
+
+// listen to the notification close
+self.addEventListener('notificationclose', event => {
+  event.waitUntil(self.clients.matchAll().then(clients => {
+    if (clients.length) { // check if at least one tab is already open
+      clients[0].postMessage('Push notification clicked!');
+    }
+  }));
+});
